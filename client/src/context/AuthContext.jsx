@@ -4,7 +4,11 @@ import { createContext, useEffect, useState } from "react";
 export const AuthContext = createContext();
 
 export const AppContextProvider = (props) => {
-  const [authState, setAuthState] = useState(false);
+  const [authState, setAuthState] = useState({
+    username: "",
+    id: 0,
+    status: false,
+  });
 
   useEffect(() => {
     axios
@@ -15,16 +19,26 @@ export const AppContextProvider = (props) => {
       })
       .then((response) => {
         if (response.data.error) {
-          setAuthState(false);
+          setAuthState({ ...authState, status: false });
         } else {
-          setAuthState(true)
+          setAuthState({
+            username: response.data.username,
+            id: response.data.id,
+            status: true,
+          });
         }
       });
   }, []);
 
+  const logout = () => {
+    localStorage.removeItem("accessToken");
+    setAuthState({ username: "", id: 0, status: false });
+  };
+
   const value = {
     authState,
     setAuthState,
+    logout,
   };
 
   return (

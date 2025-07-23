@@ -1,8 +1,7 @@
 const { Users } = require("../models");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const {} = require('../middlewares/auth')
-
+const {} = require("../middlewares/auth");
 
 const registerUser = async (req, res) => {
   try {
@@ -45,7 +44,7 @@ const loginUser = async (req, res) => {
         "mysqlusingnodejs"
       );
 
-      res.json(accessToken);
+      res.json({ token: accessToken, username: username, id: user.id });
     });
   } catch (error) {
     console.error(error);
@@ -53,9 +52,7 @@ const loginUser = async (req, res) => {
 };
 
 const verifyUser = async (req, res) => {
-  res.json(req.user)
-}
-
-
+  res.json(req.user);
+};
 
 module.exports = { registerUser, loginUser, verifyUser };
