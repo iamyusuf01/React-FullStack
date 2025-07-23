@@ -14,6 +14,7 @@ function Post() {
     axios.get(`http://localhost:3001/posts/byId/${id}`).then((response) => {
       setPostObject(response.data);
     });
+
     axios.get(`http://localhost:3001/comments/${id}`).then((response) => {
       setComments(response.data);
     });
@@ -22,14 +23,14 @@ function Post() {
   const addComment = () => {
     axios
       .post(
-        "http://localhost:3001/comments/",
+        "http://localhost:3001/comments",
         {
           commentBody: newComments,
           PostId: id,
         },
         {
           headers: {
-            accessToken: sessionStorage.getItem("accessToken"),
+            accessToken: localStorage.getItem("accessToken"),
           },
         }
       )
@@ -37,7 +38,7 @@ function Post() {
         if (response.data.error) {
           console.log(response.data.error);
         } else {
-          const commentToadd = { commentBody: newComments };
+          const commentToadd = { commentBody: newComments, username: response.data.username };
           setComments([...comments, commentToadd]);
           setNewComments("");
         }
@@ -64,6 +65,7 @@ function Post() {
           {comments.map((comment, key) => (
             <div className="comment" key={key}>
               {comment.commentBody}
+              <label>Username: {comment.username}</label>
             </div>
           ))}
         </div>

@@ -1,36 +1,39 @@
 import axios from "axios";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { useNavigate } from "react-router";
+import { AuthContext } from "../context/AuthContext";
 function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
-  const navigate = useNavigate()
+  const { setAuthState } = useContext(AuthContext);
+  const navigate = useNavigate();
 
-  const login =  () => {
+  const login = () => {
     const data = { username: username, password: password };
     axios.post("http://localhost:3001/auth/login", data).then((response) => {
       if (response.data.error) {
         alert(response.data.error);
       } else {
-        sessionStorage.setItem("accessToken", response.data);
-        navigate('/')
+        localStorage.setItem("accessToken", response.data);
+        setAuthState(true)
+        navigate("/");
       }
     });
-   };
+  };
   return (
     <div>
-         <label>Username:</label>
+      <label>Username:</label>
       <input
         type="text"
         onChange={(e) => setUsername(e.target.value)}
-      //   value={username}
+        //   value={username}
       />
       <label>Password:</label>
       <input
         type="password"
         onChange={(e) => setPassword(e.target.value)}
-      //   value={password}
+        //   value={password}
       />
       <button onClick={login}>Login</button>
     </div>

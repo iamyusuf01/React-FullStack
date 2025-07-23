@@ -7,6 +7,6 @@ const router = express.Router();
 const { comments, addComments } = require('../controllers/comments');
 const { validateToken } = require('../middlewares/auth');
 router.route('/:postId').get(comments)
-router.route('/', validateToken).post(addComments)
+router.route('/').post(validateToken, addComments)
 
 module.exports = router

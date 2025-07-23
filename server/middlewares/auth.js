@@ -9,7 +9,7 @@ const validateToken = (req, res, next) => {
 
   try {
     const validToken = jwt.verify(accessToken, "mysqlusingnodejs");
-
+        req.user = validToken;
     if (validToken) {
       return next();
     }
@@ -18,7 +18,6 @@ const validateToken = (req, res, next) => {
       error: error,
     });
   }
-  next();
 };
 
 module.exports = { validateToken };

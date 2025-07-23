@@ -4,15 +4,22 @@ import CreatePost from "./pages/CreatePost";
 import Post from "./pages/Post";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
+import { AuthContext } from "./context/AuthContext";
+import { useContext } from "react";
 
 function App() {
+  const { authState } = useContext(AuthContext);
   return (
     <div>
       <div className="navbar">
         <Link to={"/"}>Home Page</Link>
         <Link to={"/createpost"}>Create a post</Link>
-        <Link to={"/login"}> Login</Link>
-        <Link to={"/register"}> Register</Link>
+        {!authState && (
+          <>
+            <Link to={"/login"}> Login</Link>
+            <Link to={"/register"}> Register</Link>
+          </>
+        )}
       </div>
       <Routes>
         <Route path="/" element={<Home />} />
