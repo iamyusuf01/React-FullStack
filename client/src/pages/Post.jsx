@@ -21,14 +21,26 @@ function Post() {
 
   const addComment = () => {
     axios
-      .post("http://localhost:3001/comments/", {
-        commentBody: newComments,
-        PostId: id,
-      })
+      .post(
+        "http://localhost:3001/comments/",
+        {
+          commentBody: newComments,
+          PostId: id,
+        },
+        {
+          headers: {
+            accessToken: sessionStorage.getItem("accessToken"),
+          },
+        }
+      )
       .then((response) => {
-        const commentToadd = {commentBody: newComments}
-        setComments([...comments, commentToadd])
-        setNewComments('')
+        if (response.data.error) {
+          console.log(response.data.error);
+        } else {
+          const commentToadd = { commentBody: newComments };
+          setComments([...comments, commentToadd]);
+          setNewComments("");
+        }
       });
   };
   return (
@@ -43,7 +55,7 @@ function Post() {
           <input
             type="text"
             placeholder="Comment.."
-            onClick={(e) => setNewComments(e.target.value)}
+            onChange={(e) => setNewComments(e.target.value)}
             value={newComments}
           />
           <button onClick={addComment}>Add Comments</button>

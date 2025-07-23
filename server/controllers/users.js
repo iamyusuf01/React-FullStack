@@ -1,5 +1,7 @@
 const { Users } = require("../models");
 const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
+
 const registerUser = async (req, res) => {
   try {
     const { username, password } = req.body;
@@ -35,7 +37,13 @@ const loginUser = async (req, res) => {
       if (!match) {
         res.json({ error: "wrong username or password combination" });
       }
-      res.json({ success: true, message: "user login successfully" });
+
+      const accessToken = jwt.sign(
+        { username: user.username, id: user.id },
+        "mysqlusingnodejs"
+      );
+
+      res.json(accessToken);
     });
   } catch (error) {
     console.error(error);

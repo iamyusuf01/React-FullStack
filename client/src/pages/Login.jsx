@@ -1,31 +1,38 @@
-import React from "react";
-import { Formik, Form, Field, ErrorMessage } from "formik";
-import * as Yup from "yup";
 import axios from "axios";
 import { useState } from "react";
 import { useNavigate } from "react-router";
 function Login() {
- const [username, setUsername] = useState('')
- const [password, setPassword] = useState('')
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
 
- const navigate = useNavigate()
+  const navigate = useNavigate()
 
- const login = async () => {
-    const data = {username: username, password: password};
-     axios.post("http://localhost:3001/posts", data).then((response) => {
+  const login =  () => {
+    const data = { username: username, password: password };
+    axios.post("http://localhost:3001/auth/login", data).then((response) => {
+      if (response.data.error) {
+        alert(response.data.error);
+      } else {
+        sessionStorage.setItem("accessToken", response.data);
+        navigate('/')
+      }
     });
- }
+   };
   return (
     <div>
-       <input type="text"
+         <label>Username:</label>
+      <input
+        type="text"
         onChange={(e) => setUsername(e.target.value)}
-        value={username}
-       />
-       <input type="password"
+      //   value={username}
+      />
+      <label>Password:</label>
+      <input
+        type="password"
         onChange={(e) => setPassword(e.target.value)}
-        value={password}
-       />
-       <button onClick={login}>Login</button>
+      //   value={password}
+      />
+      <button onClick={login}>Login</button>
     </div>
   );
 }

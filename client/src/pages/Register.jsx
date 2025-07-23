@@ -26,11 +26,11 @@ function Register() {
         <Form className="formContainer">
           <label>Username: </label>
           <ErrorMessage name="username" component="span" />
-          <Field id="inputCreatePost" name="username" placeholder="username" />
+          <Field id="" name="username" placeholder="username" />
           <label>Password: </label>
           <ErrorMessage name="password" component="span" />
-          <Field id="inputCreatePost" name="password" type="password" placeholder="password" />
-          <button type="submit">Login</button>
+          <Field id="" name="password" type="password" placeholder="password" />
+          <button type="submit">Register</button>
         </Form>
       </Formik>
     </div>
