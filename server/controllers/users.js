@@ -1,7 +1,9 @@
 const { Users } = require("../models");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const {} = require("../middlewares/auth");
+const { auth } = require("../middlewares/auth");
+const { Comments } = require("../models/Comments");
+const { where } = require("sequelize");
 
 const registerUser = async (req, res) => {
   try {
@@ -54,5 +56,6 @@ const loginUser = async (req, res) => {
 const verifyUser = async (req, res) => {
   res.json(req.user);
 };
+
 
 module.exports = { registerUser, loginUser, verifyUser };

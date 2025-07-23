@@ -18,4 +18,13 @@ const addComments = async (req, res) => {
   res.json(comment);
 };
 
-module.exports = { comments, addComments };
+const deleteComments = async (req, res) => {
+  const commentId = req.params.commentId;
+  Comments.destroy({
+    where: {
+      id: commentId,
+    },
+  });
+  res.json("Deleted Successfully")
+};
+module.exports = { comments, addComments, deleteComments };
