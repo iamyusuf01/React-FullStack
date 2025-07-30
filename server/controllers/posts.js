@@ -1,4 +1,6 @@
+const { Model } = require("sequelize");
 const { Posts } = require("../models");
+const { likes } = require("./likes");
 
 const posts = async (req, res) => {
   try {

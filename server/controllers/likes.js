@@ -1,7 +1,5 @@
-const { where } = require("sequelize");
+
 const { Likes } = require("../models");
-const { useId } = require("react");
-const Comments = require("../models/Comments");
 
 const likes = async (req, res) => {
   const { PostId } = req.body;
@@ -14,14 +12,14 @@ const likes = async (req, res) => {
 
   if (!found) {
     await Likes.create({ PostId: PostId, UserId: UserId });
-    res.json("Liked the post");
+    res.json({liked: true});
   } else {
     await Likes.destroy({
       where: { PostId: PostId, UserId: UserId },
     });
   }
 
-  res.json("Unlike the post");
+  res.json({liked: false});
 };
 
 module.exports = {
