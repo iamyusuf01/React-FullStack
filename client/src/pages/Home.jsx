@@ -1,17 +1,25 @@
-import React from "react";
+import React, { useContext } from "react";
 import axios from "axios";
 import { useEffect } from "react";
 import { useState } from "react";
 import { useNavigate } from "react-router";
-import ThumbUpAltIcon from '@mui/icons-material/ThumbUpAlt';
+import ThumbUpAltIcon from "@mui/icons-material/ThumbUpAlt";
+import { AuthContext } from "../context/AuthContext";
 
 function Home() {
   const [listOfPosts, setListOfPosts] = useState([]);
+  const { authState } = useContext(AuthContext);
+
   const navigate = useNavigate();
   useEffect(() => {
-    axios.get("http://localhost:3001/posts").then((response) => {
-      setListOfPosts(response.data);
-    });
+    if (!localStorage.getItem("accessToken")) {
+      navigate("/login");
+    } else {
+      navigate("/");
+      axios.get("http://localhost:3001/posts").then((response) => {
+        setListOfPosts(response.data);
+      });
+    }
   }, []);
 
   const likePost = (postId) => {
@@ -32,8 +40,8 @@ function Home() {
               if (response.data.liked) {
                 return { ...post, likes: [...post.likes, 0] };
               } else {
-                const likesArray = post.likes
-                likesArray.pop()
+                const likesArray = post.likes;
+                likesArray.pop();
                 return { ...post, likes: likesArray };
               }
             } else {
@@ -53,7 +61,7 @@ function Home() {
           </div>
           <div className="footer">
             {value.username}{" "}
-            <ThumbUpAltIcon onClick={() => likePost(value.id)}/>
+            <ThumbUpAltIcon onClick={() => likePost(value.id)} />
             {/* <label>{value.likes.length}</label> */}
           </div>
         </div>

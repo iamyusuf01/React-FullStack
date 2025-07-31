@@ -2,7 +2,7 @@ import axios from "axios";
 import React, { useContext } from "react";
 import { useState } from "react";
 import { useEffect } from "react";
-import { useParams } from "react-router";
+import { useNavigate, useParams } from "react-router";
 import { AuthContext } from "../context/AuthContext";
 
 function Post() {
@@ -10,6 +10,7 @@ function Post() {
   const [postObject, setPostObject] = useState([]);
   const [comments, setComments] = useState([]);
   const [newComments, setNewComments] = useState([]);
+  const navigate = useNavigate()
 
   const { authState } = useContext(AuthContext);
 
@@ -52,22 +53,46 @@ function Post() {
   };
 
   const deleteComment = (id) => {
-    axios.delete(`http://localhost:3001/comments/${id}`, {
-      headers: {
-        accessToken: localStorage.getItem("accessToken"),
-      },
-    }).then((response) => {
-      setComments(comments.filter((val) => {
-        return val.id != id
-      }))
-    });
+    axios
+      .delete(`http://localhost:3001/comments/${id}`, {
+        headers: {
+          accessToken: localStorage.getItem("accessToken"),
+        },
+      })
+      .then((response) => {
+        setComments(
+          comments.filter((val) => {
+            return val.id != id;
+          })
+        );
+      });
+  };
+
+  const deletePost = (id) => {
+    axios
+      .delete(`http://localhost:3001/posts/${id}`, {
+        headers: {
+          accessToken: localStorage.getItem("accessToken"),
+        },
+      })
+      .then((response) => {
+        setPostObject(response.data);
+        navigate('/')
+      });
   };
   return (
     <div className="postPage">
       <div className="leftSide">
         <div className="title">{postObject.title}</div>
         <div className="postText">{postObject.postText}</div>
-        <div className="footer">{postObject.username}</div>
+        <div className="footer">
+          {postObject.username}{" "}
+          {authState.username === postObject.username && (
+            <button onClick={() => deletePost(postObject.id)}>
+              Delete Posts
+            </button>
+          )}
+        </div>
       </div>
       <div className="rightSide">
         <div className="addCommentContainer">

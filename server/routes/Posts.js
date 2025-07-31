@@ -1,10 +1,18 @@
-const express = require('express')
+const express = require("express");
 
-const router = express.Router()
+const router = express.Router();
 
-const { posts, listOfPosts, byId } = require('../controllers/posts')
-router.route("/").post(posts)
-router.route('/').get(listOfPosts)
-router.route("/byId/:id").get(byId)
+const {
+  posts,
+  listOfPosts,
+  byId,
+  deletePosts,
+} = require("../controllers/posts");
+const { validateToken } = require("../middlewares/auth");
 
-module.exports = router
+router.route("/").post(validateToken, posts);
+router.route("/").get(listOfPosts);
+router.route("/byId/:id").get(byId);
+router.route("/:postId").delete(validateToken, deletePosts);
+
+module.exports = router;

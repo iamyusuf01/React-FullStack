@@ -13,17 +13,19 @@ function App() {
   return (
     <div>
       <div className="navbar">
-        <Link to={"/"}>Home Page</Link>
-        <Link to={"/createpost"}>Create a post</Link>
         {!authState.status ? (
           <>
             <Link to={"/login"}> Login</Link>
             <Link to={"/register"}> Register</Link>
           </>
         ) : (
-          <button onClick={logout}>LogOut</button>
+          <>
+            <Link to={"/"}>Home Page</Link>
+            <Link to={"/createpost"}>Create a post</Link>
+          </>
         )}
         <h2>{authState.username}</h2>
+        {authState.status && <button onClick={logout}>LogOut</button>}
       </div>
       <Routes>
         <Route path="/" element={<Home />} />
@@ -31,7 +33,7 @@ function App() {
         <Route path="/post/:id" element={<Post />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
-        <Route path="*" element={<PageNotFound/>} />
+        <Route path="*" element={<PageNotFound />} />
       </Routes>
     </div>
   );

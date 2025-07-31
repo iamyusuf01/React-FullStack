@@ -1,26 +1,38 @@
-import React from "react";
+import React, { useContext, useEffect } from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import axios from "axios";
 import { useNavigate } from "react-router";
+import { AuthContext } from "../context/AuthContext";
 function CreatePost() {
-    const navigate = useNavigate()
+  const { authState } = useContext(AuthContext);
+
+  const navigate = useNavigate();
   const initialValue = {
     title: "",
     postText: "",
-    username: "",
   };
 
+  useEffect(() => {
+    if (!localStorage.getItem('accessToken')) {
+      navigate("/login");
+    }
+  }, []);
   const onSubmit = (data) => {
-    axios.post("http://localhost:3001/posts", data).then((response) => {
-      navigate('/');
-    });
+    axios
+      .post("http://localhost:3001/posts", data, {
+        headers: {
+          accessToken: localStorage.getItem("accessToken"),
+        },
+      })
+      .then((response) => {
+        navigate("/");
+      });
   };
 
   const validationSchema = Yup.object().shape({
     title: Yup.string().required(),
     postText: Yup.string().required(),
-    username: Yup.string().min(3).max(15).required(),
   });
   return (
     <div className="CreatePostPage">
@@ -36,9 +48,7 @@ function CreatePost() {
           <label>Post: </label>
           <ErrorMessage name="postText" component="span" />
           <Field id="inputCreatePost" name="postText" placeholder="Post" />
-          <label>Username: </label>
-          <ErrorMessage name="username" component="span" />
-          <Field id="inputCreatePost" name="username" placeholder="username" />
+
           <button type="submit">Create Post</button>
         </Form>
       </Formik>
