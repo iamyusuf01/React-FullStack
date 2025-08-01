@@ -1,12 +1,14 @@
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router";
+import { AuthContext } from "../context/AuthContext";
 
 function Profile() {
   let { id } = useParams();
   const navigate = useNavigate();
   const [username, setUsername] = useState("");
   const [listOfPosts, setListOfPosts] = useState([]);
+  const { authState } = useContext(AuthContext);
 
   useEffect(() => {
     axios.get(`http://localhost:3001/auth/user-info/${id}`).then((response) => {
@@ -21,6 +23,9 @@ function Profile() {
     <div>
       <div className="user-ingo">
         <h1>Username: {username}</h1>
+        { authState.username === username && (
+          <button onClick={() => {navigate('/change-password')}}> Change Password</button>
+          )}
       </div>
       <div className="listOfPosts">
         {listOfPosts.map((value, key) => (

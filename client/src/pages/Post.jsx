@@ -10,7 +10,7 @@ function Post() {
   const [postObject, setPostObject] = useState([]);
   const [comments, setComments] = useState([]);
   const [newComments, setNewComments] = useState([]);
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const { authState } = useContext(AuthContext);
 
@@ -77,14 +77,53 @@ function Post() {
       })
       .then((response) => {
         setPostObject(response.data);
-        navigate('/')
+        navigate("/");
       });
+  };
+
+  const editPost = (options) => {
+    if (options === "titile") {
+      let newTitle = prompt("Enter New Title:");
+      axios.put(
+        "http://localhost:3001/posts/title",
+        { newTitle: newTitle, id: id },
+        { headers: { accessToken: localStorage.getItem("accessToken") } }
+      );
+      setPostObject({...postObject, title: newTitle})
+    } else {
+      let newPostText = prompt("Enter New Text:");
+      axios.put(
+        "http://localhost:3001/posts/postText",
+        { newText: newPostText, id: id },
+        { headers: { accessToken: localStorage.getItem("accessToken") } }
+      );
+      setPostObject({...postObject, postText: newPostText})
+
+    }
   };
   return (
     <div className="postPage">
       <div className="leftSide">
-        <div className="title">{postObject.title}</div>
-        <div className="postText">{postObject.postText}</div>
+        <div
+          className="title"
+          onClick={() => {
+            if (authState.username === postObject.username) {
+              editPost("titile");
+            }
+          }}
+        >
+          {postObject.title}
+        </div>
+        <div
+          className="postText"
+          onClick={() => {
+            if (authState.username === postObject.username) {
+              editPost("postText");
+            }
+          }}
+        >
+          {postObject.postText}
+        </div>
         <div className="footer">
           {postObject.username}{" "}
           {authState.username === postObject.username && (

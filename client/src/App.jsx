@@ -8,6 +8,7 @@ import { AuthContext } from "./context/AuthContext";
 import { useContext } from "react";
 import PageNotFound from "./pages/PageNotFound";
 import Profile from "./pages/Profile";
+import ChangePassword from "./pages/ChangePassword";
 
 function App() {
   const { authState, logout } = useContext(AuthContext);
@@ -35,6 +36,7 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/profile/:id" element={<Profile />} />
+        <Route path="/change-password" element={<ChangePassword />} />
         <Route path="*" element={<PageNotFound />} />
       </Routes>
     </div>
