@@ -7,6 +7,7 @@ const posts = async (req, res) => {
   try {
     const post = req.body;
     post.username = req.user.username;
+    post.UserId = req.user.id;
     await Posts.create(post);
     res.json(post);
   } catch (error) {}
@@ -27,20 +28,28 @@ const byId = async (req, res) => {
   res.json(post);
 };
 
+const byUserId = async (req, res) => {
+  const id = req.params.id;
+  const listOfPosts = await Posts.findAll({ where: { UserId: id } });
+
+  res.json(listOfPosts);
+};
+
 const deletePosts = async (req, res) => {
-  const  postId  = req.params.postId;
+  const postId = req.params.postId;
 
   await Posts.destroy({
     where: {
-      id: postId
-    }
-  })
-  res.json("Delete posts Successfully")
+      id: postId,
+    },
+  });
+  res.json("Delete posts Successfully");
 };
 
 module.exports = {
   posts,
   listOfPosts,
   byId,
-  deletePosts
+  deletePosts,
+  byUserId,
 };

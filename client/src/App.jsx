@@ -7,6 +7,7 @@ import Register from "./pages/Register";
 import { AuthContext } from "./context/AuthContext";
 import { useContext } from "react";
 import PageNotFound from "./pages/PageNotFound";
+import Profile from "./pages/Profile";
 
 function App() {
   const { authState, logout } = useContext(AuthContext);
@@ -33,6 +34,7 @@ function App() {
         <Route path="/post/:id" element={<Post />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/profile/:id" element={<Profile />} />
         <Route path="*" element={<PageNotFound />} />
       </Routes>
     </div>

@@ -57,5 +57,14 @@ const verifyUser = async (req, res) => {
   res.json(req.user);
 };
 
+const userProfile = async (req, res) => {
+  const id = req.params.id;
 
-module.exports = { registerUser, loginUser, verifyUser };
+  const userInfo = await Users.findByPk(id, {
+    attributes: { exclude: ["password"] },
+  });
+
+  res.json( userInfo );
+};
+
+module.exports = { registerUser, loginUser, verifyUser, userProfile };
