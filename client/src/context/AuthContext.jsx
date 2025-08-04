@@ -1,5 +1,7 @@
 import axios from "axios";
 import { createContext, useEffect, useState } from "react";
+import { useNavigate } from "react-router";
+import { toast } from "react-toastify";
 
 export const AuthContext = createContext();
 
@@ -9,6 +11,8 @@ export const AppContextProvider = (props) => {
     id: 0,
     status: false,
   });
+
+  const navigate = useNavigate()
 
   useEffect(() => {
     axios
@@ -32,7 +36,9 @@ export const AppContextProvider = (props) => {
 
   const logout = () => {
     localStorage.removeItem("accessToken");
+    toast("User logout sucessfully")
     setAuthState({ username: "", id: 0, status: false });
+    navigate('/login')
   };
 
   const value = {
