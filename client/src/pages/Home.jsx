@@ -55,7 +55,9 @@ function Home() {
     <div className="grid grid-cols-3 px-12 gap-12 pt-12 justify-items-center">
       {listOfPosts.map((value, key) => (
         <div
-          className=" flex flex-col justify-center  border-gray-400 shadow-blue-200 inset-shadow-2xs inset-shadow-blue-100 shadow-xl w-[340px] h-[140px]"
+          className=" flex flex-col justify-center cursor-pointer
+           border-gray-400 shadow-blue-200 inset-shadow-2xs inset-shadow-blue-100 
+           shadow-xl w-[340px] h-[140px]   "
           key={key}
         >
           <div className="pl-4">

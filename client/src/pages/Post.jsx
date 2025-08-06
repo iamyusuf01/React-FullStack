@@ -14,14 +14,27 @@ function Post() {
 
   const { authState } = useContext(AuthContext);
 
-  useEffect(() => {
-    axios.get(`http://localhost:3001/posts/byId/${id}`).then((response) => {
-      setPostObject(response.data);
-    });
+  useEffect((e) => {
+    
+    axios
+      .get(`http://localhost:3001/posts/byId/${id}`, {
+        headers: {
+          accessToken: localStorage.getItem("accessToken"),
+        },
+      })
+      .then((response) => {
+        setPostObject(response.data);
+      });
 
-    axios.get(`http://localhost:3001/comments/${id}`).then((response) => {
-      setComments(response.data);
-    });
+    axios
+      .get(`http://localhost:3001/comments/${id}`, {
+        headers: {
+          accessToken: localStorage.getItem("accessToken"),
+        },
+      })
+      .then((response) => {
+        setComments(response.data);
+      });
   }, []);
 
   const addComment = () => {
@@ -89,7 +102,7 @@ function Post() {
         { newTitle: newTitle, id: id },
         { headers: { accessToken: localStorage.getItem("accessToken") } }
       );
-      setPostObject({...postObject, title: newTitle})
+      setPostObject({ ...postObject, title: newTitle });
     } else {
       let newPostText = prompt("Enter New Text:");
       axios.put(
@@ -97,15 +110,18 @@ function Post() {
         { newText: newPostText, id: id },
         { headers: { accessToken: localStorage.getItem("accessToken") } }
       );
-      setPostObject({...postObject, postText: newPostText})
-
+      setPostObject({ ...postObject, postText: newPostText });
     }
   };
   return (
-    <div className="postPage">
-      <div className="leftSide">
+    <div className="grid grid-cols-2 px-32 gap-12 pt-12 font-serif">
+      <div
+        className="flex flex-col justify-center cursor-pointer px-4
+           border-gray-400 shadow-blue-100 inset-shadow-2xs inset-shadow-blue-100
+           shadow-xl w-[340px] h-[140px] "
+      >
         <div
-          className="title"
+          className="font-medium"
           onClick={() => {
             if (authState.username === postObject.username) {
               editPost("titile");
@@ -115,7 +131,7 @@ function Post() {
           {postObject.title}
         </div>
         <div
-          className="postText"
+          className="text-sm"
           onClick={() => {
             if (authState.username === postObject.username) {
               editPost("postText");
@@ -124,39 +140,57 @@ function Post() {
         >
           {postObject.postText}
         </div>
-        <div className="footer">
+        <div className="py-2 flex justify-between">
           {postObject.username}{" "}
-          {authState.username === postObject.username && (
-            <button onClick={() => deletePost(postObject.id)}>
-              Delete Posts
-            </button>
-          )}
+          <div>
+            {authState.username === postObject.username && (
+              <button
+                className="cursor-pointer rounded w-32 hover:bg-blue-500 hover:text-white"
+                onClick={() => deletePost(postObject.id)}
+              >
+                Delete Posts
+              </button>
+            )}
+          </div>
         </div>
       </div>
-      <div className="rightSide">
-        <div className="addCommentContainer">
+      <div className=" grid">
+        <div className="border border-gray-500 rounded h-8  w-[340px] pt-1 text-center">
           <input
+            className="outline-none"
             type="text"
             placeholder="Comment.."
             onChange={(e) => setNewComments(e.target.value)}
             value={newComments}
           />
-          <button onClick={addComment}>Add Comments</button>
+          <button
+            className="font-medium font-serif cursor-pointer rounded w-32 hover:bg-blue-500 hover:text-white"
+            onClick={addComment}
+          >
+            Add Comments
+          </button>
         </div>
-        <div className="listOfComments">
+        <div className="border border-zinc-400 rounded-xl px-4 mt-6">
           {comments.map((comment, key) => (
-            <div className="comment" key={key}>
-              {comment.commentBody}
-              <label>Username: {comment.username}</label>
-              {authState.username === comment.username && (
-                <button
-                  onClick={() => {
-                    deleteComment(comment.id);
-                  }}
-                >
-                  X
-                </button>
-              )}
+            <div
+              className="grid grid-cols gap-2 rounded bg-gray-300/50 mx-4 my-6 p-2 "
+              key={key}
+            >
+              <div> {comment.commentBody}</div>
+              <div className="flex justify-between">
+                <label className="text-sm">Username: {comment.username}</label>
+                {authState.username === comment.username && (
+                  <button
+                    className="cursor-pointer rounded w-12 hover:bg-blue-500 hover:text-white
+                  "
+                    onClick={() => {
+                      deleteComment(comment.id);
+                    }}
+                  >
+                    X
+                  </button>
+                )}
+              </div>
             </div>
           ))}
         </div>
